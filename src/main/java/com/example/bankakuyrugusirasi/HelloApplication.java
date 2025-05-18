@@ -7,7 +7,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -34,6 +33,7 @@ public class HelloApplication extends Application {
     private Button ekleButton, cagirButton;
     private Label cagrilanMusteriLabel;
     private ToggleGroup musteriTuruGroup, kuyrukSecimiGroup;
+    private TextField adTextField, soyadTextField; // Ad-soyad alanları
 
     private int musteriNumarasi = 1;
 
@@ -41,7 +41,8 @@ public class HelloApplication extends Application {
     public void start(Stage primaryStage) {
         // Ana düzen
         BorderPane root = new BorderPane();
-        root.setPadding(new Insets(10));
+        root.setPadding(new Insets(20));
+        root.setStyle("-fx-background-color: #e0f2f7; -fx-font-family: 'Inter';");
 
         // Kuyruk Gösterimleri
         VBox kuyruklarVBox = createKuyruklarVBox();
@@ -56,7 +57,7 @@ public class HelloApplication extends Application {
         root.setRight(musteriCagirVBox);
 
         // Sahne
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 800, 500);
         primaryStage.setTitle("Banka Sıra Uygulaması");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -64,20 +65,27 @@ public class HelloApplication extends Application {
 
     // Kuyruk Gösterimleri için VBox
     private VBox createKuyruklarVBox() {
-        VBox kuyruklarVBox = new VBox(10);
-        kuyruklarVBox.setPadding(new Insets(10));
+        VBox kuyruklarVBox = new VBox(20);
+        kuyruklarVBox.setPadding(new Insets(20));
+        kuyruklarVBox.setStyle("-fx-alignment: center;");
 
         Label bireyselLabel = new Label("Bireysel Kuyruk:");
+        bireyselLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 1.2em; -fx-text-fill: #1976d2;");
         bireyselListView = new ListView<>(bireyselKuyrukListesi);
-        bireyselListView.setPrefHeight(100);
+        bireyselListView.setPrefHeight(120);
+        bireyselListView.setStyle("-fx-border-color: #bbdefb; -fx-border-radius: 5;");
 
         Label kurumsalLabel = new Label("Kurumsal Kuyruk:");
+        kurumsalLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 1.2em; -fx-text-fill: #1976d2;");
         kurumsalListView = new ListView<>(kurumsalKuyrukListesi);
-        kurumsalListView.setPrefHeight(100);
+        kurumsalListView.setPrefHeight(120);
+        kurumsalListView.setStyle("-fx-border-color: #bbdefb; -fx-border-radius: 5;");
 
         Label oncelikliLabel = new Label("Öncelikli Kuyruk:");
+        oncelikliLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 1.2em; -fx-text-fill: #1976d2;");
         oncelikliListView = new ListView<>(oncelikliKuyrukListesi);
-        oncelikliListView.setPrefHeight(100);
+        oncelikliListView.setPrefHeight(120);
+        oncelikliListView.setStyle("-fx-border-color: #bbdefb; -fx-border-radius: 5;");
 
         kuyruklarVBox.getChildren().addAll(bireyselLabel, bireyselListView, kurumsalLabel, kurumsalListView, oncelikliLabel, oncelikliListView);
         return kuyruklarVBox;
@@ -85,16 +93,28 @@ public class HelloApplication extends Application {
 
     // Müşteri Ekleme Bölümü için VBox
     private VBox createMusteriEkleVBox() {
-        VBox musteriEkleVBox = new VBox(10);
-        musteriEkleVBox.setPadding(new Insets(10));
-        musteriEkleVBox.setPrefWidth(150);
+        VBox musteriEkleVBox = new VBox(15);
+        musteriEkleVBox.setPadding(new Insets(20));
+        musteriEkleVBox.setPrefWidth(200);
+        musteriEkleVBox.setStyle("-fx-background-color: #f5f5f5; -fx-border-radius: 10; -fx-padding: 20;");
 
         Label baslikLabel = new Label("Yeni Müşteri Ekle");
-        baslikLabel.setStyle("-fx-font-weight: bold;");
+        baslikLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 1.4em; -fx-text-fill: #212121; -fx-margin-bottom: 10;");
+
+        Label adLabel = new Label("Ad:");
+        adLabel.setStyle("-fx-text-fill: #424242;");
+        adTextField = new TextField();
+
+        Label soyadLabel = new Label("Soyad:");
+        soyadLabel.setStyle("-fx-text-fill: #424242;");
+        soyadTextField = new TextField();
 
         bireyselRadio = new RadioButton("Bireysel");
+        bireyselRadio.setStyle("-fx-text-fill: #424242;");
         kurumsalRadio = new RadioButton("Kurumsal");
+        kurumsalRadio.setStyle("-fx-text-fill: #424242;");
         oncelikliRadio = new RadioButton("Öncelikli");
+        oncelikliRadio.setStyle("-fx-text-fill: #424242;");
 
         musteriTuruGroup = new ToggleGroup();
         bireyselRadio.setToggleGroup(musteriTuruGroup);
@@ -103,84 +123,95 @@ public class HelloApplication extends Application {
         bireyselRadio.setSelected(true); // Varsayılan olarak bireysel seçili
 
         ekleButton = new Button("Ekle");
+        ekleButton.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20; -fx-border-radius: 5; -fx-cursor: hand;");
         ekleButton.setOnAction(e -> musteriEkle());
 
-        musteriEkleVBox.getChildren().addAll(baslikLabel, bireyselRadio, kurumsalRadio, oncelikliRadio, ekleButton);
+        musteriEkleVBox.getChildren().addAll(baslikLabel, adLabel, adTextField, soyadLabel, soyadTextField, bireyselRadio, kurumsalRadio, oncelikliRadio, ekleButton);
         return musteriEkleVBox;
     }
 
     // Müşteri Çağırma Bölümü için VBox
     private VBox createMusteriCagirVBox() {
-        VBox musteriCagirVBox = new VBox(10);
-        musteriCagirVBox.setPadding(new Insets(10));
-        musteriCagirVBox.setPrefWidth(150);
+        VBox musteriCagirVBox = new VBox(15);
+        musteriCagirVBox.setPadding(new Insets(20));
+        musteriCagirVBox.setPrefWidth(200);
+        musteriCagirVBox.setStyle("-fx-background-color: #f5f5f5; -fx-border-radius: 10; -fx-padding: 20;");
+        musteriCagirVBox.setAlignment(javafx.geometry.Pos.TOP_CENTER);
 
         Label baslikLabel = new Label("Müşteri Çağır");
-        baslikLabel.setStyle("-fx-font-weight: bold;");
-
-        bireyselRadio = new RadioButton("Bireysel");
-        kurumsalRadio = new RadioButton("Kurumsal");
-        oncelikliRadio = new RadioButton("Öncelikli");
-
-        kuyrukSecimiGroup = new ToggleGroup();
-        bireyselRadio.setToggleGroup(kuyrukSecimiGroup);
-        kurumsalRadio.setToggleGroup(kuyrukSecimiGroup);
-        oncelikliRadio.setToggleGroup(kuyrukSecimiGroup);
-        bireyselRadio.setSelected(true); // Varsayılan olarak bireysel seçili
+        baslikLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 1.4em; -fx-text-fill: #212121; -fx-margin-bottom: 15;");
 
         cagirButton = new Button("Çağır");
+        cagirButton.setStyle("-fx-background-color: #26a69a; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 15 30; -fx-border-radius: 5; -fx-cursor: hand; -fx-font-size: 1.1em;");
         cagirButton.setOnAction(e -> musteriCagir());
 
-        cagrilanMusteriLabel = new Label("");
         Label cagrilanLabel = new Label("Çağrılan Müşteri:");
-        cagrilanLabel.setStyle("-fx-font-style: italic;");
+        cagrilanLabel.setStyle("-fx-font-style: italic; -fx-text-fill: #757575; -fx-margin-top: 20;");
 
-        musteriCagirVBox.getChildren().addAll(baslikLabel, bireyselRadio, kurumsalRadio, oncelikliRadio, cagirButton, cagrilanLabel, cagrilanMusteriLabel);
+        cagrilanMusteriLabel = new Label("");
+        cagrilanMusteriLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 1.6em; -fx-text-fill: #212121; -fx-padding: 10; -fx-background-color: #f0f0f0; -fx-border-radius: 5;");
+        cagrilanMusteriLabel.setPrefWidth(180);
+        cagrilanMusteriLabel.setAlignment(javafx.geometry.Pos.CENTER);
+
+        // Radyo butonları kaldırıldı
+        musteriCagirVBox.getChildren().addAll(baslikLabel, cagirButton, cagrilanLabel, cagrilanMusteriLabel);
         return musteriCagirVBox;
     }
 
-    // Müşteri Ekleme Metodu
+    // Müşteri Ekleme Metodu (Ad-Soyad ile)
     private void musteriEkle() {
         String musteriTuru = ((RadioButton) musteriTuruGroup.getSelectedToggle()).getText();
-        String musteri = musteriNumarasi++ + " - " + musteriTuru + " Müşteri";
+        String ad = adTextField.getText();
+        String soyad = soyadTextField.getText();
+        String musteriBilgisi = musteriNumarasi++ + " - " + ad + " " + soyad + " (" + musteriTuru + ")";
 
         if (musteriTuru.equals("Bireysel")) {
-            bireyselKuyruk.offer(musteri);
-            bireyselKuyrukListesi.add(musteri);
+            bireyselKuyruk.offer(musteriBilgisi);
+            bireyselKuyrukListesi.add(musteriBilgisi);
         } else if (musteriTuru.equals("Kurumsal")) {
-            kurumsalKuyruk.offer(musteri);
-            kurumsalKuyrukListesi.add(musteri);
+            kurumsalKuyruk.offer(musteriBilgisi);
+            kurumsalKuyrukListesi.add(musteriBilgisi);
         } else {
-            oncelikliKuyruk.offer(musteri);
-            oncelikliKuyrukListesi.add(musteri);
+            oncelikliKuyruk.offer(musteriBilgisi);
+            oncelikliKuyrukListesi.add(musteriBilgisi);
         }
+        // Eklendikten sonra metin alanlarını temizle
+        adTextField.clear();
+        soyadTextField.clear();
     }
 
-    // Müşteri Çağırma Metodu
+    // Müşteri Çağırma Metodu (Öncelik Sırasına Göre)
     private void musteriCagir() {
         String cagrilanMusteri = null;
-        String kuyrukTuru = ((RadioButton) kuyrukSecimiGroup.getSelectedToggle()).getText();
 
-        if (kuyrukTuru.equals("Bireysel")) {
-            cagrilanMusteri = bireyselKuyruk.poll();
-            if (cagrilanMusteri != null) {
-                bireyselKuyrukListesi.remove(0);
-            }
-        } else if (kuyrukTuru.equals("Kurumsal")) {
+        // 1. Öncelikli Kuyruğu Kontrol Et
+        if (!oncelikliKuyruk.isEmpty()) {
+            cagrilanMusteri = oncelikliKuyruk.poll();
+            oncelikliKuyrukListesi.remove(0);
+        }
+        // 2. Kurumsal Kuyruğu Kontrol Et (Öncelikli boşsa)
+        else if (!kurumsalKuyruk.isEmpty()) {
             cagrilanMusteri = kurumsalKuyruk.poll();
-            if (cagrilanMusteri != null) {
-                kurumsalKuyrukListesi.remove(0);
+            kurumsalKuyrukListesi.remove(0);
+        }
+        // 3. Bireysel Kuyruğu Kontrol Et (Öncelikli ve Kurumsal boşsa)
+        else if (!bireyselKuyruk.isEmpty()) {
+            cagrilanMusteri = bireyselKuyruk.poll();
+            bireyselKuyrukListesi.remove(0);
+        }
+
+        if (cagrilanMusteri != null) {
+            if(cagrilanMusteri.contains(" - ")) {
+                String[] parts = cagrilanMusteri.split(" - ")[1].split(" ");
+                if(parts.length > 1)
+                    cagrilanMusteriLabel.setText(parts[0] + " " + parts[1]);
+                else
+                    cagrilanMusteriLabel.setText(parts[0]);
+            }
+            else{
+                cagrilanMusteriLabel.setText(cagrilanMusteri);
             }
         } else {
-            cagrilanMusteri = oncelikliKuyruk.poll();
-            if (cagrilanMusteri != null) {
-                oncelikliKuyrukListesi.remove(0);
-            }
-        }
-        if (cagrilanMusteri != null) {
-            cagrilanMusteriLabel.setText(cagrilanMusteri);
-        }
-        else{
             cagrilanMusteriLabel.setText("Kuyruk Boş");
         }
     }
@@ -189,4 +220,3 @@ public class HelloApplication extends Application {
         launch(args);
     }
 }
-
